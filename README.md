@@ -6,7 +6,7 @@ Created a simple spring app that runs without an embedded server. The reason Spr
 - logging
 - configuration
  
-Additionally, since the scope was very open, developing in spring allows it to be easily extended: event driven (with kafka listener), have it's own rest api, or be a simple cli command.
+Additionally, since the scope was very open, developing in spring allows it to be easily extended: event driven (with kafka listener), have it's own rest api, or be used as a Function as a service.
 
 ## Dependencies
 - Maven 3.6.3
