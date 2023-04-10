@@ -47,6 +47,8 @@ or:
 
 ## Considerations
 
+- Design
+  - Since this was a fairly straight forward task there wasn't need for a lot of design. Just kept it simple with a separation of concerns between the service and web layer.
 - Service layer (OutageDetailService)
   - Contains business logic of filtering and matching ids. Developed in a functional-ish way (no side-effects in methods).
   - Mapping devices by id meant that we didn't have to check every outage id against every device id.
