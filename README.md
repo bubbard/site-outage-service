@@ -1,12 +1,13 @@
 # Site-outage-service
 
-Created a simple spring app that runs without an embedded server. Spring provides:
-- json serialiation (through jackson)
+Created a simple spring app that runs without an embedded server. The reason Spring was chosen was that it already provides:
+- json ser/deserialisation
 - dependency injection
 - logging
 - configuration
  
 Additionally, since the scope was very open, developing in spring allows it to be easily extended: event driven (with kafka listener), have it's own rest api, or be a simple cli command.
+
 ## Dependencies
 - Maven 3.6.3
 - Java 17
@@ -14,10 +15,11 @@ Additionally, since the scope was very open, developing in spring allows it to b
 - Junit 5
 
 ## Running
+JAVA_HOME system env must be set to jdk17 or later.
 
 I've included maven wrapper, so you shouldn't need to install maven on your local machine first.
 
-**From the project root**, irst run:
+**From the project root**, first run:
 
 ``./mvnw clean install``
 
@@ -52,7 +54,7 @@ or:
     - OutageDetailService#getDeviceById
   - Leveraged Streams and Optionals for readability.
 - Web Layer (KrakenWebClient)
-  - While we're only using synchronous http calls for this task, with WebClient we can easily extend to support more use-cases.  
+  - While we're only using synchronous http calls for this task, with WebClient we can easily extend to support more use-cases. WebClient is also recomended instead of RestTemplate (which is now in maintenance mode).
   - Additionally, WebClient supports retry logic in a really simple way. Allowing for this service to be resilient against occasional 500 responses.
     
   ``Retry.backoff(maxRetries, Duration.ofSeconds(minBackoff))``
@@ -70,10 +72,10 @@ or:
   ``public record Outage(String id, String begin, String end)``
   - Ignoring any additional fields that may be added in future as we don't need them for our logic (for the current requirements).
 - Api Key
-  - Since this artefact isn't getting deployed, I couldn't use normal vault (hashicorp) for secrets so instead it can either be added via config (put not be commited) or be added as a cli argument.
+  - Since this artefact isn't getting deployed, I couldn't use normal vault (hashicorp) for secrets so instead it can either be added via config (but shouldn't be commited) or be added as a cli argument.
 - Configuration
   - Made most fields that could be extracted configurable as the decouple them a bit more from the implementation. I'm not expecting them to change but just allows for a separation of concerns. For example, without knowing the business reason for filtering out some outages based on time then having it defined in config allows the implementation to be agnostic.
   - The endpoints aren't (currently) configurable since they are less likely to change (well at least would hopefully change in a backwards compatible manor).
 - Testing
-  - The service is tested by mocking out the webclient. Allows for isolated testing of the business logic through the public methods.
+  - The service is unit tested by mocking out the webclient. Allows for isolated testing of the business logic through the public methods. Started with basic time edge cases tests and also included scenario with the given example jsons.
   - Web client tested with a mock web server. Enables testing of retry and error handling with expected exceptions. Additionally, allows to ensure are pojos records are deserialising/serialising as expected.
